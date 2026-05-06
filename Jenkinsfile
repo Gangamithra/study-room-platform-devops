@@ -2,11 +2,16 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
                 dir('server') {
-                    sh 'npm install'
+                    sh 'docker run --rm -v $PWD:/app -w /app node:20 npm install'
                 }
             }
         }
@@ -19,9 +24,7 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                sh 'docker stop backend || true'
-                sh 'docker rm backend || true'
-                sh 'docker run -d -p 5002:5002 --name backend study-room-backend'
+                sh 'docker run -d -p 5002:5002 study-room-backend'
             }
         }
     }
