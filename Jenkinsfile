@@ -2,21 +2,26 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Install Dependencies') {
             steps {
-                git 'https://github.com/Gangamithra/study-room-platform-devops.git'
+                dir('server') {
+                    sh 'npm install'
+                }
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
                 sh 'docker build -t study-room-backend ./server'
             }
         }
 
-        stage('Run') {
+        stage('Run Container') {
             steps {
-                sh 'docker run -d -p 5002:5002 study-room-backend || true'
+                sh 'docker stop backend || true'
+                sh 'docker rm backend || true'
+                sh 'docker run -d -p 5002:5002 --name backend study-room-backend'
             }
         }
     }
