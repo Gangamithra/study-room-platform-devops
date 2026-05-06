@@ -18,6 +18,7 @@ const Message = require("./models/Message");
 const Room = require("./models/Room");
 const User = require("./models/User");
 
+
 // --- Groq client ---
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
